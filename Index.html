@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Defiende Alvarado!</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #071827;
+    color: white;
+    overflow: hidden;
+}
+
+#game {
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            to bottom,
+            #7db7d4 0%,
+            #b9d8df 43%,
+            #087b9b 44%,
+            #075d78 70%,
+            #285b35 71%,
+            #183b24 100%
+        );
+}
+
+/* ---------------- HEADER ---------------- */
+
+header {
+    height: 65px;
+    background: rgba(0,0,0,.75);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    position: relative;
+    z-index: 20;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.stats {
+    display: flex;
+    gap: 8px;
+}
+
+.stat {
+    background: #182b3d;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* ---------------- ESCENARIO ---------------- */
+
+#sea {
+    position: absolute;
+    top: 44%;
+    left: 0;
+    width: 100%;
+    height: 28%;
+
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255,255,255,.12) 0px,
+            rgba(255,255,255,.12) 2px,
+            transparent 2px,
+            transparent 18px
+        );
+}
+
+#shore {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 29%;
+    background:
+        linear-gradient(
+            to bottom,
+            #367343,
+            #183d25
+        );
+}
+
+/* ---------------- FORTÍN ---------------- */
+
+#fort {
+    position: absolute;
+    bottom: 13%;
+    left: 5%;
+    width: 190px;
+    height: 105px;
+    background: #a97e51;
+    border: 7px solid #604226;
+    z-index: 5;
+}
+
+#fort:before,
+#fort:after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    width: 38px;
+    height: 78px;
+    background: #a97e51;
+    border: 6px solid #604226;
+}
+
+#fort:before {
+    left: -15px;
+}
+
+#fort:after {
+    right: -15px;
+}
+
+#cannon {
+    position: absolute;
+    right: -35px;
+    top: 35px;
+    font-size: 38px;
+    z-index: 10;
+}
+
+#fortName {
+    position: absolute;
+    left: 5%;
+    bottom: 8%;
+    font-weight: bold;
+}
+
+/* ---------------- BARCOS ---------------- */
+
+#boats {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+}
+
+.boat {
+    position: absolute;
+    width: 120px;
+    height: 75px;
+    transition: left .6s linear;
+}
+
+.hull {
+    position: absolute;
+    bottom: 0;
+    left: 5px;
+    width: 105px;
+    height: 27px;
+    background: #241914;
+    border-radius: 0 0 50px 50px;
+}
+
+.deck {
+    position: absolute;
+    bottom: 23px;
+    left: 20px;
+    width: 75px;
+    height: 10px;
+    background: #36251d;
+}
+
+.mast {
+    position: absolute;
+    bottom: 28px;
+    left: 58px;
+    width: 5px;
+    height: 48px;
+    background: #211812;
+}
+
+.sail {
+    position: absolute;
+    bottom: 36px;
+    left: 63px;
+    width: 43px;
+    height: 38px;
+    background: #eee5cf;
+    clip-path: polygon(
+        0 0,
+        100% 15%,
+        100% 100%,
+        0 82%
+    );
+}
+
+.flag {
+    position: absolute;
+    left: 63px;
+    bottom: 72px;
+    font-size: 20px;
+}
+
+/* ---------------- PANEL ---------------- */
+
+#panel {
+    position: absolute;
+    z-index: 15;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(760px, 92%);
+    text-align: center;
+}
+
+/* ---------------- HISTORIA ---------------- */
+
+#story {
+    background: rgba(4,12,21,.94);
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.45);
+}
+
+#story h1 {
+    margin: 0 0 12px;
+    font-size: clamp(28px,6vw,45px);
+}
+
+#story p {
+    font-size: 18px;
+    line-height: 1.5;
+    color: #d8e8f2;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 22px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#continue {
+    background: #f4c542;
+    color: #111;
+}
+
+/* ---------------- QUIZ ---------------- */
+
+#quiz {
+    display: none;
+    background: rgba(3,10,18,.94);
+    border-radius: 18px;
+    padding: 20px;
+}
+
+#countdown {
+    font-size: 48px;
+    font-weight: 900;
+}
+
+#question {
+    font-size: 34px;
+    font-weight: bold;
+    margin: 15px;
+}
+
+.answers {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.answer {
+    background: #edf4f7;
+    color: #111;
+}
+
+.answer:hover {
+    transform: scale(1.02);
+}
+
+#feedback {
+    min-height: 28px;
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+/* ---------------- INTRO ---------------- */
+
+#intro {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(
+            circle at center,
+            #17496a,
+            #020811 75%
+        );
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+.introBox {
+    max-width: 700px;
+}
+
+.introBox h1 {
+    font-size: clamp(38px,9vw,75px);
+    margin: 0;
+}
+
+.introBox p {
+    font-size: 19px;
+    line-height: 1.5;
+    color: #d5e4ed;
+}
+
+#start {
+    background: #f4c542;
+    font-size: 20px;
+    padding: 16px 28px;
+}
+
+/* ---------------- FINAL ---------------- */
+
+#final {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 200;
+    background: rgba(2,8,15,.97);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.finalBox {
+    max-width: 650px;
+    padding: 25px;
+}
+
+.finalBox h1 {
+    font-size: 50px;
+}
+
+.finalScore {
+    font-size: 60px;
+    font-weight: bold;
+    color: #f4c542;
+}
+
+/* ---------------- FLASH ---------------- */
+
+#flash {
+    position: absolute;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+/* ---------------- MOBILE ---------------- */
+
+@media(max-width:600px) {
+
+    .logo {
+        font-size: 14px;
+    }
+
+    .stat {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    #fort {
+        transform: scale(.75);
+        transform-origin: bottom left;
+    }
+
+    #question {
+        font-size: 27px;
+    }
+
+    .answers button {
+        padding: 15px 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="game">
+
+<header>
+
+<div class="logo">
+🇲🇽 ¡DEFENDE ALVARADO!
+</div>
+
+<div class="stats">
+
+<div class="stat">
+⭐ <span id="score">0</span>
+</div>
+
+<div class="stat">
+❤️ <span id="lives">3</span>
+</div>
+
+<div class="stat">
+🌊 <span id="level">1</span>/5
+</div>
+
+</div>
+
+</header>
+
+
+<div id="sea"></div>
+<div id="shore"></div>
+
+
+<div id="fort">
+<div id="cannon">💥</div>
+</div>
+
+<div id="fortName">
+DEFENSA DE ALVARADO
+</div>
+
+
+<div id="boats"></div>
+
+
+<div id="panel">
+
+<!-- HISTORIA -->
+
+<div id="story">
+
+<h1 id="storyTitle">
+ALVARADO, VERACRUZ
+</h1>
+
+<p id="storyText">
+La amenaza se aproxima por el mar...
+</p>
+
+<button id="continue">
+COMENZAR
+</button>
+
+</div>
+
+
+<!-- PREGUNTA -->
+
+<div id="quiz">
+
+<div id="countdown">
+5
+</div>
+
+<div id="question">
+?
+</div>
+
+<div class="answers" id="answers">
+</div>
+
+<div id="feedback">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- INTRO -->
+
+<div id="intro">
+
+<div class="introBox">
+
+<h1>
+🇲🇽 ¡DEFENDE ALVARADO!
+</h1>
+
+<p>
+Año 1847. Los barcos estadounidenses se aproximan
+a la costa de Alvarado.
+</p>
+
+<p>
+Tu misión es ayudar a los defensores.
+Resuelve correctamente los desafíos matemáticos
+antes de que los barcos lleguen a la costa.
+</p>
+
+<button id="start">
+⚓ INICIAR LA DEFENSA
+</button>
+
+</div>
+
+</div>
+
+
+<!-- FINAL -->
+
+<div id="final">
+
+<div class="finalBox">
+
+<h1 id="finalTitle">
+🇲🇽 ¡ALVARADO RESISTE!
+</h1>
+
+<p id="finalText"></p>
+
+<div class="finalScore">
+<span id="finalScore">0</span>
+</div>
+
+<p>
+PUNTOS
+</p>
+
+<button onclick="location.reload()">
+🔄 JUGAR DE NUEVO
+</button>
+
+</div>
+
+</div>
+
+
+<div id="flash"></div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   DATOS DEL JUEGO
+========================================================= */
+
+const niveles = [
+
+{
+titulo: "EL AVISO",
+historia:
+"En 1847, durante la guerra entre México y Estados Unidos, la costa de Veracruz se encontraba bajo amenaza. En Alvarado, los defensores se preparaban para proteger el puerto.",
+tipo: "basico"
+},
+
+{
+titulo: "LOS BARCOS SE ACERCAN",
+historia:
+"La amenaza aparece en el horizonte. Los defensores observan el movimiento de los barcos y deben actuar rápidamente.",
+tipo: "enteros"
+},
+
+{
+titulo: "¡A LA DEFENSA!",
+historia:
+"Los barcos continúan acercándose. Cada cálculo correcto permite a los defensores responder antes de que sea demasiado tarde.",
+tipo: "multiplicacion"
+},
+
+{
+titulo: "ÚLTIMA LÍNEA",
+historia:
+"La distancia entre los barcos y la costa disminuye. La defensa necesita precisión y rapidez.",
+tipo: "jerarquia"
+},
+
+{
+titulo: "¡ALVARADO RESISTE!",
+historia:
+"La escuadra está muy cerca. Esta es la última oportunidad para demostrar que la defensa de Alvarado puede resistir.",
+tipo: "mixto"
+}
+
+];
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let nivelActual = 0;
+
+let preguntaActual = 0;
+
+let puntuacion = 0;
+
+let vidas = 3;
+
+let tiempo = 5;
+
+let intervalo;
+
+let barco = null;
+
+let posicionBarco = 78;
+
+
+/* =========================================================
+   ELEMENTOS
+========================================================= */
+
+const intro = document.getElementById("intro");
+
+const start = document.getElementById("start");
+
+const story = document.getElementById("story");
+
+const storyTitle = document.getElementById("storyTitle");
+
+const storyText = document.getElementById("storyText");
+
+const continueButton = document.getElementById("continue");
+
+const quiz = document.getElementById("quiz");
+
+const countdown = document.getElementById("countdown");
+
+const question = document.getElementById("question");
+
+const answers = document.getElementById("answers");
+
+const feedback = document.getElementById("feedback");
+
+const boats = document.getElementById("boats");
+
+const scoreElement = document.getElementById("score");
+
+const livesElement = document.getElementById("lives");
+
+const levelElement = document.getElementById("level");
+
+const final = document.getElementById("final");
+
+const finalScore = document.getElementById("finalScore");
+
+const finalTitle = document.getElementById("finalTitle");
+
+const finalText = document.getElementById("finalText");
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+start.addEventListener("click", function(){
+
+    console.log("Juego iniciado");
+
+    intro.style.display = "none";
+
+    mostrarHistoria();
+
+});
+
+
+/* =========================================================
+   MOSTRAR HISTORIA
+========================================================= */
+
+function mostrarHistoria(){
+
+    limpiarBarco();
+
+    story.style.display = "block";
+
+    quiz.style.display = "none";
+
+    storyTitle.textContent =
+        niveles[nivelActual].titulo;
+
+    storyText.textContent =
+        niveles[nivelActual].historia;
+
+    if(nivelActual === 0){
+
+        continueButton.textContent =
+            "⚓ COMENZAR DEFENSA";
+
+    } else {
+
+        continueButton.textContent =
+            "⚔️ CONTINUAR";
+
+    }
+
+}
+
+
+/* =========================================================
+   BOTÓN CONTINUAR
+========================================================= */
+
+continueButton.addEventListener("click", function(){
+
+    iniciarRonda();
+
+});
+
+
+/* =========================================================
+   INICIAR RONDA
+========================================================= */
+
+function iniciarRonda(){
+
+    story.style.display = "none";
+
+    quiz.style.display = "block";
+
+    feedback.textContent = "";
+
+    crearBarco();
+
+    comenzarCuentaRegresiva();
+
+}
+
+
+/* =========================================================
+   CREAR BARCO
+========================================================= */
+
+function crearBarco(){
+
+    limpiarBarco();
+
+    barco = document.createElement("div");
+
+    barco.className = "boat";
+
+    barco.innerHTML = `
+        <div class="hull"></div>
+        <div class="deck"></div>
+        <div class="mast"></div>
+        <div class="sail"></div>
+        <div class="flag">🇺🇸</div>
+    `;
+
+    posicionBarco = 78;
+
+    barco.style.left = posicionBarco + "%";
+
+    barco.style.bottom =
+        (25 + Math.random()*18) + "%";
+
+    boats.appendChild(barco);
+
+}
+
+
+/* =========================================================
+   CUENTA REGRESIVA
+========================================================= */
+
+function comenzarCuentaRegresiva(){
+
+    clearInterval(intervalo);
+
+    tiempo = 5;
+
+    countdown.textContent = tiempo;
+
+    generarPregunta();
+
+    intervalo = setInterval(function(){
+
+        tiempo--;
+
+        countdown.textContent = tiempo;
+
+        /* cada segundo el barco se acerca */
+
+        moverBarco();
+
+        if(tiempo <= 0){
+
+            clearInterval(intervalo);
+
+            perderVida(
+                "⏱️ ¡Se acabó el tiempo!"
+            );
+
+        }
+
+    },1000);
+
+}
+
+
+/* =========================================================
+   MOVER BARCO
+========================================================= */
+
+function moverBarco(){
+
+    if(!barco) return;
+
+    posicionBarco -= 3;
+
+    barco.style.left =
+        posicionBarco + "%";
+
+}
+
+
+/* =========================================================
+   GENERAR PREGUNTA
+========================================================= */
+
+function generarPregunta(){
+
+    let tipo =
+        niveles[nivelActual].tipo;
+
+    let a,b,c,resultado,texto;
+
+    if(tipo === "basico"){
+
+        if(Math.random() < .5){
+
+            a = aleatorio(5,30);
+
+            b = aleatorio(5,30);
+
+            resultado = a+b;
+
+            texto =
+                `${a} + ${b} = ?`;
+
+        } else {
+
+            a = aleatorio(20,50);
+
+            b = aleatorio(5,a-1);
+
+            resultado = a-b;
+
+            texto =
+                `${a} − ${b} = ?`;
+
+        }
+
+    }
+
+    else if(tipo === "enteros"){
+
+        a = aleatorio(-15,15);
+
+        b = aleatorio(-15,15);
+
+        resultado = a+b;
+
+        texto =
+            `${formatoNumero(a)} + ${formatoNumero(b)} = ?`;
+
+    }
+
+    else if(tipo === "multiplicacion"){
+
+        a = aleatorio(2,12);
+
+        b = aleatorio(2,10);
+
+        resultado = a*b;
+
+        texto =
+            `${a} × ${b} = ?`;
+
+    }
+
+    else if(tipo === "jerarquia"){
+
+        a = aleatorio(2,9);
+
+        b = aleatorio(2,9);
+
+        c = aleatorio(1,9);
+
+        resultado = a*b+c;
+
+        texto =
+            `${a} × ${b} + ${c} = ?`;
+
+    }
+
+    else{
+
+        a = aleatorio(2,9);
+
+        b = aleatorio(2,9);
+
+        c = aleatorio(1,9);
+
+        resultado = a*(b+c);
+
+        texto =
+            `${a} × (${b} + ${c}) = ?`;
+
+    }
+
+
+    question.textContent = texto;
+
+    crearRespuestas(resultado);
+
+}
+
+
+/* =========================================================
+   CREAR RESPUESTAS
+========================================================= */
+
+function crearRespuestas(correcta){
+
+    answers.innerHTML = "";
+
+    let opciones = new Set();
+
+    opciones.add(correcta);
+
+    while(opciones.size < 4){
+
+        let diferencia =
+            aleatorio(-10,10);
+
+        let opcion =
+            correcta + diferencia;
+
+        if(opcion !== correcta){
+
+            opciones.add(opcion);
+
+        }
+
+    }
+
+    let array =
+        Array.from(opciones);
+
+    array.sort(function(){
+
+        return Math.random()-.5;
+
+    });
+
+
+    array.forEach(function(valor){
+
+        let boton =
+            document.createElement("button");
+
+        boton.className = "answer";
+
+        boton.textContent = valor;
+
+        boton.addEventListener(
+            "click",
+            function(){
+
+                comprobarRespuesta(
+                    valor,
+                    correcta,
+                    boton
+                );
+
+            }
+        );
+
+        answers.appendChild(boton);
+
+    });
+
+}
+
+
+/* =========================================================
+   COMPROBAR RESPUESTA
+========================================================= */
+
+function comprobarRespuesta(
+    respuesta,
+    correcta,
+    boton
+){
+
+    clearInterval(intervalo);
+
+    document
+        .querySelectorAll(".answer")
+        .forEach(function(b){
+
+            b.disabled = true;
+
+        });
+
+
+    if(respuesta === correcta){
+
+        boton.style.background =
+            "#55d98a";
+
+        let puntos =
+            100 + tiempo*20;
+
+        puntuacion += puntos;
+
+        scoreElement.textContent =
+            puntuacion;
+
+        feedback.style.color =
+            "#72f1a4";
+
+        feedback.textContent =
+            `💥 ¡IMPACTO! +${puntos} puntos`;
+
+        disparo();
+
+        setTimeout(function(){
+
+            siguienteRonda();
+
+        },1000);
+
+    }
+
+    else{
+
+        boton.style.background =
+            "#ef6262";
+
+        perderVida(
+            "❌ ¡Respuesta incorrecta!"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DISPARO
+========================================================= */
+
+function disparo(){
+
+    const flash =
+        document.getElementById("flash");
+
+    flash.style.opacity = ".8";
+
+    setTimeout(function(){
+
+        flash.style.opacity = "0";
+
+    },100);
+
+    if(barco){
+
+        posicionBarco -= 12;
+
+        barco.style.left =
+            posicionBarco + "%";
+
+        barco.style.transform =
+            "rotate(8deg) scale(.8)";
+
+    }
+
+}
+
+
+/* =========================================================
+   PERDER VIDA
+========================================================= */
+
+function perderVida(mensaje){
+
+    clearInterval(intervalo);
+
+    vidas--;
+
+    livesElement.textContent =
+        vidas;
+
+    feedback.style.color =
+        "#ff7777";
+
+    feedback.textContent =
+        mensaje;
+
+
+    if(vidas <= 0){
+
+        setTimeout(function(){
+
+            terminar(false);
+
+        },1000);
+
+        return;
+
+    }
+
+
+    setTimeout(function(){
+
+        siguienteRonda();
+
+    },1000);
+
+}
+
+
+/* =========================================================
+   SIGUIENTE RONDA
+========================================================= */
+
+function siguienteRonda(){
+
+    preguntaActual++;
+
+    /*
+       Cada nivel tiene 4 preguntas.
+    */
+
+    if(preguntaActual >= 4){
+
+        preguntaActual = 0;
+
+        nivelActual++;
+
+        levelElement.textContent =
+            Math.min(nivelActual+1,5);
+
+
+        if(nivelActual >= niveles.length){
+
+            terminar(true);
+
+            return;
+
+        }
+
+
+        setTimeout(function(){
+
+            mostrarHistoria();
+
+        },500);
+
+    }
+
+    else{
+
+        setTimeout(function(){
+
+            iniciarRonda();
+
+        },500);
+
+    }
+
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function terminar(victoria){
+
+    clearInterval(intervalo);
+
+    limpiarBarco();
+
+    final.style.display =
+        "flex";
+
+    finalScore.textContent =
+        puntuacion;
+
+
+    if(victoria){
+
+        finalTitle.textContent =
+            "🇲🇽 ¡ALVARADO RESISTE!";
+
+        finalText.textContent =
+            "¡Excelente! Completaste los cinco niveles y superaste todos los desafíos matemáticos.";
+
+    }
+
+    else{
+
+        finalTitle.textContent =
+            "⚓ LA DEFENSA FUE SUPERADA";
+
+        finalText.textContent =
+            "Los barcos lograron acercarse demasiado. ¡Inténtalo nuevamente y mejora tu puntuación!";
+
+    }
+
+}
+
+
+/* =========================================================
+   LIMPIAR BARCO
+========================================================= */
+
+function limpiarBarco(){
+
+    if(barco){
+
+        barco.remove();
+
+        barco = null;
+
+    }
+
+}
+
+
+/* =========================================================
+   FUNCIONES AUXILIARES
+========================================================= */
+
+function aleatorio(min,max){
+
+    return Math.floor(
+        Math.random()*(max-min+1)
+    )+min;
+
+}
+
+
+function formatoNumero(numero){
+
+    if(numero < 0){
+
+        return `(${numero})`;
+
+    }
+
+    return numero;
+
+}
+
+</script>
+
+</body>
+</html>
